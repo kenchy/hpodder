@@ -58,6 +58,7 @@ import Control.Concurrent.MVar
 import Control.Concurrent
 import Data.Char
 import Control.Monad(when)
+import qualified Control.Exception as E
 
 d = debugM "downloadqueue"
 i = infoM "downloadqueue"
@@ -192,7 +193,8 @@ childthread dqmvar semaphore =
                      do callback x (DLEnded (dltok, status, result, messages))
                         -- Delete the messages file now that we don't
                         -- care about it anymore
-                        catch (removeFile (tokpath dltok ++ ".msg"))
+                        (E.catch :: IO a -> (IOError -> IO a) -> IO a)
+                              (removeFile (tokpath dltok ++ ".msg"))
                               (\_ -> return ())
                         return (dq {completedDownloads = 
                                         (x, dltok, result) :

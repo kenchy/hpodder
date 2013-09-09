@@ -43,7 +43,7 @@ import System.Posix.Process
 import System.Posix.Types
 import System.Posix.IO
 import Data.Hash.MD5
-import Control.Exception(evaluate)
+import qualified Control.Exception as E
 
 data Result = Success | Failure
             deriving (Eq, Show, Read)
@@ -74,7 +74,8 @@ getCurlConfig =
     do ad <- getAppDir
        return $ ad ++ "/curlrc"
 
-getsize fp = catch (getFileStatus fp >>= (return . Just . fileSize))
+getsize fp = (E.catch :: IO a -> (IOError -> IO a) -> IO a)
+             (getFileStatus fp >>= (return . Just . fileSize))
              (\_ -> return Nothing)
 
 {- | Begin the download process on the given URL.
