@@ -119,7 +119,7 @@ finishGetURL dltok ec =
        let r = case ec of
                   Exited ExitSuccess -> Success
                   Exited (ExitFailure i) -> Failure
-                  Terminated _ -> Failure
+                  Terminated _ False -> Failure
                   Stopped _ -> Failure
        if r == Success
           then do d $ "curl returned successfully; new size is " ++

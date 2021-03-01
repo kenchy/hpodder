@@ -89,7 +89,7 @@ updateThePodcast gi pt meter dlentry dltok status result =
        case feed of
          Nothing ->                         -- some problem with the feed
            case status of 
-             Terminated sigINT -> return () -- Ctrl-C is not a tackable error
+             Terminated sigINT False -> return () -- Ctrl-C is not a tackable error
              _ -> do curtime <- now
                      let newpc = considerDisable gi
                            (pc {lastattempt = Just curtime,
@@ -157,8 +157,9 @@ getFeed meter pc (result, status) dltok =
                                  " *** " ++ (show . castid $ pc) ++ 
                                  ": Failure parsing feed: " ++ x ++ "\n"
                                return Nothing
-         (Failure, Terminated sigINT) -> do w "\n   Ctrl-C hit; aborting!"
-                                            exitFailure
+         (Failure, Terminated sigINT False) -> do 
+            w "\n   Ctrl-C hit; aborting!"
+            exitFailure
          _ -> do writeMeterString stderr meter $
                   " *** " ++ (show . castid $ pc) ++ ": Failure downloading feed\n"
                  return Nothing

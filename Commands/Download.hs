@@ -17,6 +17,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 -}
 
 module Commands.Download(cmd, cmd_worker) where
+import Debug.Trace
 import Utils
 import System.Log.Logger
 import DB
@@ -150,7 +151,7 @@ watchTheFiles progressinterval watchFilesMV =
 procEpisode gi meter dltok ep name r =
        case r of
          (Success, _) -> procSuccess gi ep (tokpath dltok)
-         (Failure, Terminated sigINT) -> 
+         (Failure, Terminated sigINT False) -> 
              do i "Ctrl-C hit; aborting!"
                 -- Do not consider Ctrl-C a trackable error
                 exitFailure
@@ -264,7 +265,7 @@ procSuccess gi ep tmpfp =
                                     "" -> return (eptype ep)
                                     x -> return x
                    _ -> return (eptype ep)
-	
+
           stripToken = takeWhile intoken
               where intoken c = not $ isSpace c || c == ';'
 
@@ -301,7 +302,7 @@ runHook fn script =
        case status of
          Nothing -> fail "No status unexpected."
          Just (Stopped _) -> fail "Stopped process unexpected."
-         Just (Terminated sig) -> fail (printf "Post-hook \"%s\" terminated by signal %s" script (show sig))
+         Just (Terminated sig False) -> fail (printf "Post-hook \"%s\" terminated by signal %s" script (show sig))
          Just (Exited (ExitFailure code)) -> fail (printf "Post-hook \"%s\" failed with exit code %s" script (show code))
          Just (Exited ExitSuccess) -> return ()
     where runScript =
@@ -331,10 +332,19 @@ getCP ep idstr fnpart =
 
 movefile old new =
     do realnew <- findNonExisting new
-       copyFile old (realnew ++ ".partial")
-       renameFile (realnew ++ ".partial") realnew
+       -- let shortrealnew = trace ( " filename " ) (take 136 realnew)
+       let lrn = length realnew
+       traceShowM ("DEBUG: " ++ show lrn)
+       --trace ( "DEBUG: length realnew " ++ show length realnew ++ realnew ) 
+       let splitrealnew = split ".mp3" realnew
+       let shortrealnew = trace ( "DEBUG: srn" ++ show splitrealnew ++ ".mp3") (splitrealnew !! 0 ++ ".mp3" )
+       let lengthrealnew = length shortrealnew
+       --putStrLn (realnew)
+       trace ("DEBUG: copyFile " ++ old ++ show lengthrealnew ++ shortrealnew ++ ".partial") (copyFile old (shortrealnew ++ ".partial"))
+       -- copyFile old (realnew ++ ".partial")
+       renameFile (shortrealnew ++ ".partial") shortrealnew
        removeFile old
-       return realnew
+       return shortrealnew
 
 findNonExisting template =
     do dfe <- doesFileExist template

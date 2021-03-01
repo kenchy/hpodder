@@ -2,7 +2,7 @@ Source: hpodder
 Section: utils
 Priority: optional
 Maintainer: John Goerzen <jgoerzen@complete.org>
-Build-Depends: debhelper (>= 5), groff, docbook-utils, jade, lynx, scons, poppler-utils, sgml2x, gtk-doc-tools, ghc (>= 6.8.2), haskell-devscripts (>= 0.6.6), cpphs, libghc-missingh-dev (>= 1.0.0), libghc-hdbc-dev (>= 1.1.0), libghc-hdbc-sqlite3-dev (>= 2.3.1.0-2~), libghc-network-dev, libghc-unix-dev, libghc-mtl-dev, libghc-haxml-dev (>= 1:1.20), libghc-haxml-dev (<< 1:1.23~), libghc-filepath-dev, libghc-configfile-dev, libghc-hslogger-dev
+Build-Depends: debhelper (>= 5), groff, docbook-utils, openjade, lynx, scons, poppler-utils, sgml2x, gtk-doc-tools, ghc (>= 6.8.2), haskell-devscripts (>= 0.6.6), cpphs, libghc-missingh-dev (>= 1.0.0), libghc-hdbc-dev (>= 1.1.0), libghc-hdbc-sqlite3-dev (>= 2.3.1.0-2~), libghc-network-dev, libghc-unix-dev, libghc-mtl-dev, libghc-haxml-dev (>= 1:1.20), libghc-haxml-dev (<< 1:1.26~), libghc-filepath-dev, libghc-configfile-dev, libghc-hslogger-dev
 Standards-Version: 3.7.2
 Homepage: http://software.complete.org/hpodder
 Vcs-Browser: http://git.complete.org/hpodder
@@ -10,7 +10,7 @@ Vcs-Git: git://git.complete.org/hpodder
 
 Package: hpodder
 Architecture: any
-Depends: ${shlibs:Depends}, ${misc:Depends}, ${haskell:Depends}, curl, python-mutagen
+Depends: ${shlibs:Depends}, ${misc:Depends}, ${haskell:Depends}, curl, python3-mutagen
 Description: Tool to scan and download podcasts (podcatcher)
  Podcasting is a method of publishing radio-like programs on the
  Internet.  Through podcasting, almost anyone can produce their own
