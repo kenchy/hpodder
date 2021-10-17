@@ -28,6 +28,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 Written by John Goerzen, jgoerzen\@complete.org
 
 -}
+{-# LANGUAGE FlexibleContexts #-}
 module DB where
 import Config
 import Types
